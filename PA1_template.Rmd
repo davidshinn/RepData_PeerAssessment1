@@ -14,7 +14,7 @@ df <- read.csv('activity.csv', stringsAsFactors=FALSE)
 ## What is mean total number of steps taken per day?
 ```{r echo=TRUE}
 by.date <- group_by(df, date)
-total.by.date <- summarise(by.date, steps=sum(steps))
+total.by.date <- summarize(by.date, steps=sum(steps, na.rm=TRUE))
 qplot(x=total.by.date$steps, geom="histogram",
       xlab="Total Number of Steps Taken Each Day",
       ylab="Frequency",
