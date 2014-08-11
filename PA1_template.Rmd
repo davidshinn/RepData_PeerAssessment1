@@ -2,6 +2,7 @@
 ```{r echo=TRUE}
 library('dplyr')
 library('ggplot2')
+pprint <- function(x, ...) format(x, big.mark=",", ...)
 ```
 
 ## Loading and preprocessing the data
