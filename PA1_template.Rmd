@@ -1,7 +1,8 @@
 # Reproducible Research: Peer Assessment 1
 ```{r echo=TRUE}
-library('dplyr')
-library('ggplot2')
+library(dplyr)
+library(ggplot2)
+library(xtable)
 pprint <- function(x, ...) format(x, big.mark=",", ...)
 ```
 
@@ -44,6 +45,78 @@ at `r pprint(max.average)`.
 
 ## Imputing missing values
 
+```{r echo=TRUE}
+table.na.values <- table(is.na(df$steps))
+table.na.values
+```
+There are `r pprint(table.na.values['TRUE'])` rows with missing step data, out of
+`r pprint(dim(df)[1])` rows.
 
+### Strategy For Imputing Missing Data
+I compare the variances of steps among intervals in each day versus the
+variance of steps among days for each interval to determine the strategy
+for imputting missing values.
+
+```{r echo=TRUE}
+avg.sd.by.date <- mean(summarize(group_by(df, date),
+                                 sd=sd(steps, na.rm=TRUE))$sd,
+                       na.rm=TRUE)
+avg.sd.by.interval <- mean(summarize(group_by(df, interval),
+                                     sd=sd(steps, na.rm=TRUE))$sd,
+                           na.rm=TRUE)
+```
+I impute the value for missing steps by using the mean steps across
+all non-missing rows with the same interval.  This utilizes the analysis
+from the data that shows the standard deviations for same-interval steps
+(`r pprint(avg.sd.by.interval, nsmall=3)`) is lower than
+the standard deviations for same-day steps
+(`r pprint(avg.sd.by.date, nsmall=3)`), under the assumption
+that a lower standard deviation would
+be better representative for imputting missing data.
+
+### Replace Missing Values With Interval Averages
+```{r echo=TRUE}
+df.imputted <- merge(df, average.by.interval, by="interval",
+                     suffixes=c(".original", ".interval.average"))
+df.imputted$steps <- apply(df.imputted, 1,
+                           function(row) {
+                               if (is.na(row['steps.original'])) {
+                                   return (row['steps.interval.average'])
+                               } else {
+                                   return (row['steps.original'])
+                               }
+                           })
+df.imputted$steps <- as.numeric(df.imputted$steps)
+total.by.date.imputted <- summarize(group_by(df.imputted, date),
+                                    steps=sum(steps, na.rm=TRUE))
+qplot(x=steps, data=total.by.date.imputted,
+      geom="histogram",
+      xlab="Total Number of Steps Taken Each Day",
+      ylab="Frequency",
+      main="Histogram with Missing Data Imputted",
+      binwidth=1000)
+mean.steps.per.day.imputted <- mean(total.by.date.imputted$steps, na.rm=TRUE)
+median.steps.per.day.imputted <- median(total.by.date.imputted$steps, na.rm=TRUE)
+```
+
+The data with missing values imputted has a `r pprint(mean.steps.per.day.imputted)`
+mean total number of steps each day while having a
+`r pprint(median.steps.per.day.imputted)` median total number of steps each day.
+
+```{r echo=TRUE}
+stats.before.after <- data.frame(original=c(mean.steps.per.day,
+                                            median.steps.per.day),
+                                 after.imputting=c(mean.steps.per.day.imputted,
+                                                   median.steps.per.day.imputted),
+                                 row.names=c("Mean", "Median"))
+```
+```{r echo=TRUE, results="asis"}
+print(xtable(pprint(stats.before.after)), type="html")
+```
+It appears that imputting the missing values increased both the mean and median
+total number of steps per day, which is logical, as missing values
+are equivalent to zero values for total metrics (e.g., total per day).
+This also appears to have deskewed
+the data as the mean and median are now equivalent.
 
 ## Are there differences in activity patterns between weekdays and weekends?
