@@ -26,10 +26,20 @@ median.steps.per.day = median(total.by.date$steps, na.rm=TRUE)
 The data has a `r mean.steps.per.day` mean total number of steps each day while
 having a `r median.steps.per.day` median total number of steps each day.
 
-
 ## What is the average daily activity pattern?
-
-
+```{r echo=TRUE}
+by.interval <- group_by(df, interval)
+average.by.interval <- summarize(by.interval, steps=mean(steps, na.rm=TRUE))
+qplot(x=interval, y=steps, data=average.by.interval,
+      geom="line",
+      xlab="Interval",
+      ylab="Mean Steps Across All Days")
+max.average <- max(average.by.interval$steps)
+max.average.interval = average.by.interval[max.average,
+                                           'interval']
+```
+The `r max.average.interval` 5-minute interval has the maximum average steps
+at `r max.average`.
 
 ## Imputing missing values
 
