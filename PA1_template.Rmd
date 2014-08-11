@@ -24,8 +24,8 @@ mean.steps.per.day = mean(total.by.date$steps, na.rm=TRUE)
 median.steps.per.day = median(total.by.date$steps, na.rm=TRUE)
 ```
 
-The data has a `r mean.steps.per.day` mean total number of steps each day while
-having a `r median.steps.per.day` median total number of steps each day.
+The data has a `r pprint(mean.steps.per.day)` mean total number of steps each day while
+having a `r pprint(median.steps.per.day)` median total number of steps each day.
 
 ## What is the average daily activity pattern?
 ```{r echo=TRUE}
@@ -39,8 +39,8 @@ max.average <- max(average.by.interval$steps)
 max.average.interval = average.by.interval[max.average,
                                            'interval']
 ```
-The `r max.average.interval` 5-minute interval has the maximum average steps
-at `r max.average`.
+The `r pprint(max.average.interval)` 5-minute interval has the maximum average steps
+at `r pprint(max.average)`.
 
 ## Imputing missing values
 
