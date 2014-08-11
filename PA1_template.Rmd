@@ -120,3 +120,19 @@ This also appears to have deskewed
 the data as the mean and median are now equivalent.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r echo=TRUE}
+df.imputted$day.of.week <- strftime(strptime(df.imputted$date,
+                                             '%Y-%m-%d'),
+                                    '%a')
+df.imputted$part.of.week <- sapply(df.imputted$day.of.week,
+                                   function(x) ifelse(substr(x, 1, 1) == 'S',
+                                                      "weekend",
+                                                      "weekday"))
+df.imputted$part.of.week <- as.factor(df.imputted$part.of.week)
+class(df.imputted$part.of.week)
+avg.by.interval.part.of.week <-
+    summarize(group_by(df.imputted, interval, part.of.week),
+              steps=mean(steps, na.rm=TRUE))
+qplot(x=interval, y=steps, data=avg.by.interval.part.of.week, geom="line",
+      facets=part.of.week~.)
+```
