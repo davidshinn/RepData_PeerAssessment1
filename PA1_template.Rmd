@@ -1,12 +1,30 @@
 # Reproducible Research: Peer Assessment 1
-
+```{r echo=TRUE}
+library('dplyr')
+library('ggplot2')
+```
 
 ## Loading and preprocessing the data
-
-
+```{r echo=TRUE}
+unzip('activity.zip', overwrite=TRUE)
+df <- read.csv('activity.csv', stringsAsFactors=FALSE)
+#df$date <- strptime(df$date, '%Y-%m-%d')
+```
 
 ## What is mean total number of steps taken per day?
+```{r echo=TRUE}
+by.date <- group_by(df, date)
+total.by.date <- summarise(by.date, steps=sum(steps))
+qplot(x=total.by.date$steps, geom="histogram",
+      xlab="Total Number of Steps Taken Each Day",
+      ylab="Frequency",
+      binwidth=1000)
+mean.steps.per.day = mean(total.by.date$steps, na.rm=TRUE)
+median.steps.per.day = median(total.by.date$steps, na.rm=TRUE)
+```
 
+The data has a `r mean.steps.per.day` mean total number of steps each day while
+having a `r median.steps.per.day` median total number of steps each day.
 
 
 ## What is the average daily activity pattern?
