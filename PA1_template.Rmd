@@ -22,6 +22,7 @@ qplot(x=total.by.date$steps, geom="histogram",
       binwidth=1000)
 mean.steps.per.day = mean(total.by.date$steps, na.rm=TRUE)
 median.steps.per.day = median(total.by.date$steps, na.rm=TRUE)
+c(mean.steps.per.day, median.steps.per.day)
 ```
 
 The data has a `r pprint(mean.steps.per.day)` mean total number of steps each day while
@@ -38,6 +39,7 @@ qplot(x=interval, y=steps, data=average.by.interval,
 max.average <- max(average.by.interval$steps)
 max.average.interval = average.by.interval[max.average,
                                            'interval']
+c(max.average, max.average.interval)
 ```
 The `r pprint(max.average.interval)` 5-minute interval has the maximum average steps
 at `r pprint(max.average)`.
@@ -63,6 +65,7 @@ avg.sd.by.date <- mean(summarize(group_by(df, date),
 avg.sd.by.interval <- mean(summarize(group_by(df, interval),
                                      sd=sd(steps, na.rm=TRUE))$sd,
                            na.rm=TRUE)
+c(avg.sd.by.date, avg.sd.by.interval)
 ```
 I impute the value for missing steps by using the mean steps across
 all non-missing rows with the same interval.  This utilizes the analysis
@@ -96,6 +99,7 @@ qplot(x=steps, data=total.by.date.imputted,
       binwidth=1000)
 mean.steps.per.day.imputted <- mean(total.by.date.imputted$steps, na.rm=TRUE)
 median.steps.per.day.imputted <- median(total.by.date.imputted$steps, na.rm=TRUE)
+c(mean.steps.per.day.imputted, median.steps.per.day.imputted)
 ```
 
 The data with missing values imputted has a `r pprint(mean.steps.per.day.imputted)`
