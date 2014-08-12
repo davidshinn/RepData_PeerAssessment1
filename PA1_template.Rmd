@@ -90,15 +90,15 @@ df.imputted$steps <- apply(df.imputted, 1,
                            })
 df.imputted$steps <- as.numeric(df.imputted$steps)
 total.by.date.imputted <- summarize(group_by(df.imputted, date),
-                                    steps=sum(steps, na.rm=TRUE))
+                                    steps=sum(steps, na.rm=FALSE))
 qplot(x=steps, data=total.by.date.imputted,
       geom="histogram",
       xlab="Total Number of Steps Taken Each Day",
       ylab="Frequency",
       main="Histogram with Missing Data Imputted",
       binwidth=1000)
-mean.steps.per.day.imputted <- mean(total.by.date.imputted$steps, na.rm=TRUE)
-median.steps.per.day.imputted <- median(total.by.date.imputted$steps, na.rm=TRUE)
+mean.steps.per.day.imputted <- mean(total.by.date.imputted$steps, na.rm=FALSE)
+median.steps.per.day.imputted <- median(total.by.date.imputted$steps, na.rm=FALSE)
 c(mean.steps.per.day.imputted, median.steps.per.day.imputted)
 ```
 
@@ -135,7 +135,7 @@ df.imputted$part.of.week <- as.factor(df.imputted$part.of.week)
 class(df.imputted$part.of.week)
 avg.by.interval.part.of.week <-
     summarize(group_by(df.imputted, interval, part.of.week),
-              steps=mean(steps, na.rm=TRUE))
+              steps=mean(steps, na.rm=FALSE))
 qplot(x=interval, y=steps, data=avg.by.interval.part.of.week, geom="line",
       facets=part.of.week~.)
 ```
