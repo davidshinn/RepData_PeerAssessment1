@@ -139,3 +139,9 @@ avg.by.interval.part.of.week <-
 qplot(x=interval, y=steps, data=avg.by.interval.part.of.week, geom="line",
       facets=part.of.week~.)
 ```
+
+There is a clear difference in the activity pattern between weekdays and
+weekends, where weekdays have a significant spike in the morning compared
+to the rest of the day while the weekend shows relatively even activity during the
+waking hours of the days.  This may be due to more common routines of morning exercise
+during the week.
