@@ -10,7 +10,6 @@ pprint <- function(x, ...) format(x, big.mark=",", ...)
 ```{r echo=TRUE}
 unzip('activity.zip', overwrite=TRUE)
 df <- read.csv('activity.csv', stringsAsFactors=FALSE)
-#df$date <- strptime(df$date, '%Y-%m-%d')
 ```
 
 ## What is mean total number of steps taken per day?
