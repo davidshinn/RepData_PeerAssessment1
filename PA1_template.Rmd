@@ -1,6 +1,6 @@
 # Reproducible Research: Peer Assessment 1
 ```{r echo=TRUE}
-library(dplyr)
+library(dplyr, warn.conflicts=FALSE)
 library(ggplot2)
 library(xtable)
 pprint <- function(x, ...) format(x, big.mark=",", ...)
